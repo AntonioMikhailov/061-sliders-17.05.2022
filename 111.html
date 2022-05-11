@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>111</title>
+  <style>
+.box {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: rgb(178, 178, 178);
+margin: 0px 0px 0px 0px;
+
+
+}
+.wrapper-text {
+  position: relative;
+  height:100px;
+  
+}
+.text {
+  /* position: absolute; */
+ 
+}
+.box2 {
+  width: 100%;
+  height: 200px;
+  background-color: rgb(115, 115, 115);
+}
+
+
+  </style>
+</head>
+
+<body>
+  <div class="box"></div>
+  <div class="wrapper-text">
+    <!-- Сюда надо вставить div с текстом -->
+  </div>
+ <div class="box2">BOX2</div>
+
+ 
+<script>
+
+  const box = document.querySelector('.box');
+  const wrapperText = document.querySelector('.wrapper-text');
+  let newDiv = document.createElement('div');
+  newDiv.textContent = 'Привет, мир!';
+ // wrapperText.append(newDiv); // Нужно найти wrapper f это доп. строка
+  //box.nextElementSibling.append(newDiv); // если без wrapper-text
+  console.log(box.nextElementSibling); //wrapper-text
+
+</script>
+</body>
+
+</html>
