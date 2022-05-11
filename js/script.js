@@ -196,7 +196,7 @@ function showModalByScroll() {
     let scrollTop = document.documentElement.scrollTop; // прокрутка
     let clientHeight = document.documentElement.clientHeight; // высота окна body
     if(scrollHeight <= (scrollTop + clientHeight) + 100 ) {
-      console.log(222);
+      // console.log(222);
       clearTimeout(showModalDelay);
       openModal();
 }
@@ -410,10 +410,36 @@ setTimeout(() => {
  
 }
 
+// 054 - FETCH
+// fetch()
+// fetch('https://belarusbank.by/api/kursExchange')
+//   .then((response) => response.json())
+//     .then((json) => {
+//       console.log(json); 
+//     });
 
+fetch('https://jsonplaceholder.typicode.com/posts', {
+  method : 'POST',
+  body: JSON.stringify({name: 'Alex'}), // данный которые отправляем
+  headers: { // также добавляем заголовки
+    'Content-type': 'application/json',
+  }
+})
+.then((response) => response.json())
+  .then((json) => {
+    console.log(json); // получили ответ с нашими данными {name: 'Alex', id: 101}
+ });
 
-
-
+// fetch('https://belarusbank.by/api/kursExchange', { mode: 'no-cors'})
+//   .then(blob => blob.json())
+//   .then(data => {
+//     console.table(data);
+//     return data;
+//   })
+//   .catch(e => {
+//     console.log(e);
+//     return e;
+//   });
 
 
 
