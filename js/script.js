@@ -323,43 +323,65 @@ function postData(form) {
   // но проще добавить класс в CSS
  // form.append(statusMessage); // добавили текст к форме
 form.insertAdjacentElement('afterend', statusMessage );
-    // Создаем метод отправки
-    const request = new XMLHttpRequest();
-    request.open('POST', 'server.php'); // метод и путь
-// настраиваем заголовки НО они  не нужны см. ниже.
-// request.setRequestHeader('Content-type', 'application/json'); // не нужен для FormData
-const formData = new FormData(form); //получаем данные из input
+    // Создаем метод отправки вариант XML Request - устаревший
+    // const request = new XMLHttpRequest();
+    // request.open('POST', 'server.php'); // метод и путь
 
+const formData = new FormData(form); //получаем данные из input
+// Применяем метод Fetch
+fetch('server.php', {
+  method: 'POST',
+  // headers: {  // для formData заголоуки не нужны НО будут нужны для формата отправки JSON
+  //   'Content-type': 'application/json'
+  // },
+  body : formData
+
+}).then(data => data.text())
+.then(data => {
+  console.log(data); // те данные который возвращаются из Promise
+     //уведомляем юзера об успешной отправке его message
+     showThanksModal(message.success);
+       // После отправки формы очищаем поля и убираем надпись уведомление
+     
+       setTimeout(() => {
+        statusMessage.remove();
+       
+        }, 2000);
+}).catch(()=> { // сюда можно добавить еще then(), но  мы пропишем блок catch() если будет ошибка от ответа сервера
+  showThanksModal(message.failed);
+}).finally(()=> { // добавляем еще действие очистки формы - независимо от того как ответил сервер
+  form.reset();
+}); 
 // для перевода в JSON создаем пустой объект, перебирем formData  с циклом forEach - Пример - но оставил formData
-const object = {};
-formData.forEach(function(value, key) { 
-  object[key] = value;
- });
+// const object = {};
+// formData.forEach(function(value, key) { 
+//   object[key] = value;
+//  });
 
  // создаем доп. переменную
 //  const json = JSON.stringify(object); // перевели object  в JSON и теперь нужно  его поместить в  request.send(json)
 
     // получаем данные из полей. Можно долгое решение - через сбор value из всех input. НО быстрее через встроен. объект formData
 //  request.send(json);
-request.send(formData);
+// request.send(formData);
  //отслеживаем загрузку и ответ сервера
- request.addEventListener('load', ()=> { 
-   if(request.status == 200) {
-     console.log(request.response);
-   //уведомляем юзера об успешной отправке его message
-   showThanksModal(message.success);
-     // После отправки формы очищаем поля и убираем надпись уведомление
-     form.reset();
-     setTimeout(() => {
-      statusMessage.remove();
+//  request.addEventListener('load', ()=> { 
+//    if(request.status == 200) {
+//      console.log(request.response);
+//    //уведомляем юзера об успешной отправке его message
+//    showThanksModal(message.success);
+//      // После отправки формы очищаем поля и убираем надпись уведомление
+//      form.reset();
+//      setTimeout(() => {
+//       statusMessage.remove();
      
-      }, 2000);
+//       }, 2000);
 
-   } else { // если не отправилось
-    showThanksModal(message.failed);
-   }
+//    } else { // если не отправилось
+//     showThanksModal(message.failed);
+//    }
  
-});
+// });
    // Тестируем формы на сервере и получаем пока что пустые массивы. Важно! Когда мы работаем в связке XMLHTTPRequest  -FormData - нам НЕ нужны заголовки. Они установятся автоматически
    // В браузере Nerwork - находим файл server.php  - Headers  и смотрим процесс передачи 16-18
    //  При отправке форм получаем такие данные  console.log(request.response);
@@ -377,7 +399,8 @@ request.send(formData);
 
 
   });
-  
+
+ 
 } // конец ф. PostData
 
 // Создаем окно благодарности после отправки формы вместо простых надписей. Будем использовать блок modal__dialog и внего вставлять новый контент
@@ -418,17 +441,17 @@ setTimeout(() => {
 //       console.log(json); 
 //     });
 
-fetch('https://jsonplaceholder.typicode.com/posts', {
-  method : 'POST',
-  body: JSON.stringify({name: 'Alex'}), // данный которые отправляем
-  headers: { // также добавляем заголовки
-    'Content-type': 'application/json',
-  }
-})
-.then((response) => response.json())
-  .then((json) => {
-    console.log(json); // получили ответ с нашими данными {name: 'Alex', id: 101}
- });
+// fetch('https://jsonplaceholder.typicode.com/posts', {
+//   method : 'POST',
+//   body: JSON.stringify({name: 'Alex'}), // данный которые отправляем
+//   headers: { // также добавляем заголовки
+//     'Content-type': 'application/json',
+//   }
+// })
+// .then((response) => response.json())
+//   .then((json) => {
+//     console.log(json); // получили ответ с нашими данными {name: 'Alex', id: 101}
+//  });
 
 // fetch('https://belarusbank.by/api/kursExchange', { mode: 'no-cors'})
 //   .then(blob => blob.json())
