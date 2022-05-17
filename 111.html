@@ -50,23 +50,19 @@ margin: 0px 0px 0px 0px;
  } 
 
 
+ function makeWorker() {
+  let name = "Pete";
+   function() {
+    console.log(name); // Pete -  т.к. сначала ищет в ближайшем окружении
+};
+return name
+}
+let name = "John";
+// create a function
+let work = makeWorker();
+// call it
+work();// что будет показано? "Pete" (из места создания) или "John" (из места выполнения) – Pete
 
-let date = new Date(); // получаем месяц, который был 40 дней 
-
-function getDateAgo(date, days) {
- date.setDate(date.getDate() - days);  //5 / 15 -10
-  console.log( date.setDate(date.getDate() - days)); // 1650347914817 получили время назад в TimeStamp из которого получим месяц прошлый
- return date.getMonth(); // если поменять на  getDate() получим день месяца
-  }
-  let res = getDateAgo(date, 16); // 10 - 1- февраль, 20 - 0- январь, 50 - 11 декабрь
-  console.log(res); //  11  - декабрь
-
-  // Например
-  let n = new Date('2022-02-11');
-  console.log(n); //Fri Feb 11 2022
-
-  let s = n.getMonth()
-  console.log(s);
 
 
 </script>
