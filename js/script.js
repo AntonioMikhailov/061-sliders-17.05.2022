@@ -212,37 +212,91 @@ this.price = this.price * this.transfer;
     this.parent.append(element); // вставляем элемент внутрь родителя в конец
   }
 }
+// импортируем данные карточек с сервера из файла db.json
+const getResource = async (url)=> {
+  const res = await fetch(url);
+  if(!res.ok) { // если что то не так ( св-во ok или status)
+    throw new Error(`Could not fetch ${url}, status:${res.status}`); // Объект ошибки куда вставятся данные
+  }
+  return await res.json(); 
+};
+
+// Первый вариант через Класс
+// getResource(' http://localhost:3000/menu')
+// .then(data => {
+//   // мы получаем массив карточек ( объектов) и перебираем их
+//   data.forEach(({img, altimg, title, descr, price}) => { 
+//     //через деструктуризацию
+//     new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+  
+//    });
+
+// });
+
+// вариант через библиотеку Axios
+axios.get(' http://localhost:3000/menu')
+.then(data => {
+ 
+    data.data.forEach(({img, altimg, title, descr, price}) => { 
+      //через деструктуризацию
+      new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    });
+     });
+
+// Второй вариант без класса, если шаблон класса не нужен и объект простой
+// getResource(' http://localhost:3000/menu')
+// .then(data => createCard(data)); 
+  
+// function createCard(data) { 
+//   data.forEach(({img, altimg, title, descr, price}) => { 
+//     const element = document.createElement('div');
+//     element.classList.add('menu__item');
+//     element.innerHTML= `
+//     <img src=${img} alt=${altimg}>
+//       <h3 class="menu__item-subtitle">${title}</h3>
+//       <div class="menu__item-descr">${descr}</div>
+//       <div class="menu__item-divider"></div>
+//       <div class="menu__item-price">
+//           <div class="menu__item-cost">Цена:</div>
+//           <div class="menu__item-total"><span>${price}</span> грн/день</div>
+//       </div>
+//     `;
+//     document.querySelector('.menu .container').append(element);
+//    });
+// }
+
+// Удаляем карточки т.к. получаем их из db.json
 // Шаблон класса готов - создаем новые объекты
-// 1 вариант
-let div = new MenuCard( // передаем аргументы через запятую
-"img/tabs/vegy.jpg",
-"vegy",
-'Меню "Фитнес"',
-'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-12,
-'.menu .container',
-);
-div.render();
-// console.log(div);
-// Создаем еще два объекта и добавляем в верстку
-// 2 вар вызова более короткий
-new MenuCard(
-  "img/tabs/elite.jpg",
-"йоги",
-'Меню "Йога"',
-'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-7,
-'.menu .container',
-).render();
-new MenuCard(
-  "img/tabs/post.jpg",
-"йоги",
-'Меню "Антон"',
-'Йееей! В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-17,
-'.menu .container',
-'menu__item'
-).render();
+// // 1 вариант
+// let div = new MenuCard( // передаем аргументы через запятую
+// "img/tabs/vegy.jpg",
+// "vegy",
+// 'Меню "Фитнес"',
+// 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+// 12,
+// '.menu .container',
+// );
+// div.render();
+// // console.log(div);
+// // Создаем еще два объекта и добавляем в верстку
+// // 2 вар вызова более короткий
+// new MenuCard(
+//   "img/tabs/elite.jpg",
+// "йоги",
+// 'Меню "Йога"',
+// 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+// 7,
+// '.menu .container',
+// ).render();
+// new MenuCard(
+//   "img/tabs/post.jpg",
+// "йоги",
+// 'Меню "Антон"',
+// 'Йееей! В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+// 17,
+// '.menu .container',
+// 'menu__item'
+// ).render();
 
 
 // Отправка Форм обратной связи через AJAX на локальный файл server.php
