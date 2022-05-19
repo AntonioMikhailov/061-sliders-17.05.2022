@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slider-062Lesson</title>
+  <style>
+    * {
+      font-family: Arial, sans-serif;
+    }
+    .offer__slider {
+      width: 650px;
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .offer__slider-counter {
+      display: flex;
+      width: 180px;
+      align-items: center;
+      font-size: 24px;
+      color: rgba(0, 0, 0, .5)
+    }
+    .offer__slider-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, .25)
+    }
+    .offer__slider-prev {
+      margin-right: 10px;
+      cursor: pointer
+    }
+    .offer__slider-next {
+      margin-left: 10px;
+      cursor: pointer
+    }
+    .offer__slider #current {
+      font-size: 48px;
+      font-weight: 700;
+      color: #000
+    }
+    .offer__slide {
+      width: 100%;
+      height: 390px;
+    }
+    /* .active.offer__slide {
+      opacity: 1;
+      visibility: visible;
+    } */
+    .offer__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+  </style>
+</head>
+<body>
+  <div class="offer__slider">
+    <div class="offer__slider-counter">
+      <div class="offer__slider-prev">
+        <img src="icons/left.svg" alt="prev">
+      </div>
+      <span id="current"></span>
+      /
+      <span id="total"></span>
+      <div class="offer__slider-next">
+        <img src="icons/right.svg" alt="next">
+      </div>
+    </div>
+    <!-- ----------------------Слайдер -->
+    <div class="offer__slider-wrapper">
+      <!-- Добавили Обертку к 1 варианту -->
+      <div class="offer__slider-inner">
+        <!-- Отдельные слайды -->
+        <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/food-12.jpg" alt="food">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/olive-oil.jpg" alt="oil">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/paprika.jpg" alt="paprika">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/food-12.jpg" alt="food">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/olive-oil.jpg" alt="oil">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/paprika.jpg" alt="paprika">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Слайдер Карусель Урок -062 по прмеру с GitHub НО с промоткой назад
+    const offerSlide = document.querySelectorAll('.offer__slide');
+    const sliderPrevBtn = document.querySelector('.offer__slider-prev');
+    const sliderNextBtn = document.querySelector('.offer__slider-next');
+    const currentNum = document.querySelector('#current');
+    const totalNum = document.querySelector('#total');
+    const slidesWrapper = document.querySelector('.offer__slider-wrapper');
+    const sliderInnerField = document.querySelector('.offer__slider-inner');
+    // Также надо получить ширину Wrapper Слайдов через GetComputedStyle
+widthWrapper = window.getComputedStyle(slidesWrapper).width;
+// Получим 650 Почему 650? – потому что у  глвного родителя стоит width -650.
+let indexSlide = 1; 
+let offset = 0; // чтобы знать на сколько было перемещение слайдера
+// Суть translate - смещение слайдера обычно влево, а знаичит в минус (-)
+// Изначально смещение (0)При первом клике сместится первый слайд влево на 650px , когда смещение дойдет до последнего слайда (№4) минус станет максимальным ( -1950px)  - дальше смещать некуда  и весь слайдер надо промотать обратно на 0.  Поэтому значение смещения может быть или ноль или отрицательное всегда. Поэтому здесь будет минус при кликах что вперед, что назад translateX(-${offset}px)`
+//Далее вычисляем ширину всех слайдов в процентах
+    sliderInnerField.style.width = 100 * offerSlide.length + '%';
+    console.log( sliderInnerField.style.width); // 400%
+ //Теперь мне не надо вручную умножать в CSS кол-во фото на проценты если фото будет больше  
+ //Также добавляем галереи Flex и transition
+ sliderInnerField.style.display = 'flex';
+ sliderInnerField.style.transition = 'all 0.3s ease .0s'; 
+ // Прячем лишние фото за Wrapper
+ slidesWrapper.style.overflow = 'hidden';
+ //Теперь каждому фото надо установить одинаковую ширину ( на всяк. случай)
+ offerSlide.forEach(item => { 
+  item.style.width = widthWrapper; 
+ });
+ // КЛИКАЕV НА КНОПКАХ
+ sliderNextBtn.addEventListener('click', ()=> { 
+   // уловие чтобы следить когда слайдер дойдет до последнего
+   // НО width  у нас 650px  и надо отрезать px от числа иначе NaN
+if(offset == +widthWrapper.slice(0, widthWrapper.length -2) * (offerSlide.length -1))
+// Но так проще  console.log(parseInt(widthWrapper)); // 650
+{
+  offset = 0;
+} else {
+  offset += +widthWrapper.slice(0, widthWrapper.length -2) // 650
+}
+// будем сдивгать на ширину offset 
+  sliderInnerField.style.transform = `translateX(-${offset}px)`; // минус стоит перед offset -${ofsset}px
+  showCurrentNum(indexSlide = indexSlide + 1);
+  console.log(indexSlide);
+});
+sliderPrevBtn.addEventListener('click', ()=> { 
+  // здесь мы проверяем не последний а первый слайд
+if( offset == 0){
+ offset = +widthWrapper.slice(0, widthWrapper.length -2) * (offerSlide.length -1)
+} else {
+  offset -= +widthWrapper.slice(0, widthWrapper.length -2) // 650
+}
+  sliderInnerField.style.transform = `translateX(-${offset}px)`;
+  showCurrentNum(indexSlide = indexSlide - 1);
+});
+   //ф. показа текущего номера
+    function showCurrentNum(n) {
+      console.log(n);
+      if (n > offerSlide.length) {
+        indexSlide = 1;
+      }
+      if (n < 1) {
+        indexSlide = offerSlide.length;
+      }
+      if(indexSlide <10) {
+        currentNum.innerHTML = `0${indexSlide}`; // именно indexSlide  а не (n) 
+      } else {
+        currentNum.innerHTML = indexSlide;
+      }
+    }
+    showCurrentNum(indexSlide);
+        // функция показа Общего кол-ва номеров слайда
+        function showTotalNum() {
+ if (offerSlide.length < 10) {
+        totalNum.innerHTML = `0${offerSlide.length}`;
+        // currentNum.innerHTML = `0${indexSlide}`;
+      } else {
+        totalNum.innerHTML = offerSlide.length;
+        // currentNum.innerHTML = indexSlide;
+      }
+    }
+    showTotalNum();
+  </script>
+</body>
+</html>
