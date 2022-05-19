@@ -220,6 +220,7 @@ a {
 	font-size:24px;
 	color:rgba(0,0,0,.5)}
 .offer__slider-wrapper {
+  position: relative;
 	width:100%;
 	margin-top:15px;
 	box-shadow:0 4px 30px rgba(0,0,0,.25)}
@@ -234,8 +235,19 @@ a {
 	font-weight:700;
 	color:#000}
 .offer__slide {
+  position: absolute;
+  top: 0;
 	width:100%;
-	height:390px}
+	height:390px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease .0s;
+ }
+
+.active.offer__slide {
+  opacity: 1;
+  visibility: visible;
+}
 .offer__slide img {
 	width:100%;
 	height:100%;

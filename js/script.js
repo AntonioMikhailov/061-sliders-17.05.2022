@@ -155,7 +155,7 @@ btnOpenModal.forEach(item => {
  });
   // Появление модалки при скроле до низа ( минус 300px) или после 10 секунд с начала входа на сайт
   // Для этого создадим функциии открытия модалки и закрытия
-  let showModalDelay = setTimeout( openModal, 50000);
+  // let showModalDelay = setTimeout( openModal, 50000); // убрал чтобы не мешало
 // ф. показа при скроле вниз
 function showModalByScroll() { 
   let scrollHeight = document.body.scrollHeight; // вся высота body
@@ -164,7 +164,7 @@ function showModalByScroll() {
     if(scrollHeight <= (scrollTop + clientHeight) + 100 ) {
       // console.log(222);
       clearTimeout(showModalDelay);
-      openModal();
+      // openModal(); // закрыл чтобы не мешало
 }
 }
   window.addEventListener('scroll', showModalByScroll);
@@ -220,7 +220,6 @@ const getResource = async (url)=> {
   }
   return await res.json(); 
 };
-
 // Первый вариант через Класс
 // getResource(' http://localhost:3000/menu')
 // .then(data => {
@@ -228,25 +227,19 @@ const getResource = async (url)=> {
 //   data.forEach(({img, altimg, title, descr, price}) => { 
 //     //через деструктуризацию
 //     new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-  
 //    });
-
 // });
-
 // вариант через библиотеку Axios
 axios.get(' http://localhost:3000/menu')
 .then(data => {
- 
     data.data.forEach(({img, altimg, title, descr, price}) => { 
       //через деструктуризацию
       new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
     });
      });
-
 // Второй вариант без класса, если шаблон класса не нужен и объект простой
 // getResource(' http://localhost:3000/menu')
 // .then(data => createCard(data)); 
-  
 // function createCard(data) { 
 //   data.forEach(({img, altimg, title, descr, price}) => { 
 //     const element = document.createElement('div');
@@ -264,7 +257,6 @@ axios.get(' http://localhost:3000/menu')
 //     document.querySelector('.menu .container').append(element);
 //    });
 // }
-
 // Удаляем карточки т.к. получаем их из db.json
 // Шаблон класса готов - создаем новые объекты
 // // 1 вариант
@@ -297,8 +289,6 @@ axios.get(' http://localhost:3000/menu')
 // '.menu .container',
 // 'menu__item'
 // ).render();
-
-
 // Отправка Форм обратной связи через AJAX на локальный файл server.php
 // Находим все формы по тегу form 3шт
 const forms = document.querySelectorAll('form');
@@ -313,7 +303,6 @@ const message =  {
 forms.forEach(item => { 
   bindpostData(item);  //вызываем функцию
  });
-
 // создаем отдельную ф. по общению с сервером
 // Важно сто код здесь асинхронный и мы не знаем сколько времени на ответ от сервера уйдет и код не ждет выполнения fetch() а идет дальше поэтому используем async/await ( всегда в паре)
 const postData = async (url, data)=> {
@@ -323,11 +312,9 @@ const postData = async (url, data)=> {
       'Content-type': 'application/json'
     },
    body : data
-
   });
   return await res.json(); // возвращает Promise дальше в then - также нужен await
 };
-
 function bindpostData(form) {
   form.addEventListener('submit', (e)=> {
     e.preventDefault();  //отменяем перезагрузку
@@ -353,9 +340,7 @@ const formData = new FormData(form); //получаем данные из input
 // или так - сначала превращаем в массив массивов а потом обратно в объект JSON
 const json = JSON.stringify(Object.fromEntries(formData.entries()));
 // Применяем метод Fetch
-
 postData('http://localhost:3000/requests', json) // server.php уже не нужен если Json сервер
-
 .then(data => {
   console.log(data); // те данные который возвращаются из Promise {"name":"Антон","phone":"+7911 291 0063"}
      //уведомляем юзера об успешной отправке его message
@@ -371,7 +356,6 @@ postData('http://localhost:3000/requests', json) // server.php уже не ну�
 }); 
   });
 } // конец ф. PostData
-
 // Создаем окно благодарности после отправки формы вместо простых надписей. Будем использовать блок modal__dialog и внего вставлять новый контент
 function showThanksModal(message) { 
   const prevModalDialog = document.querySelector('.modal__dialog');
@@ -395,20 +379,120 @@ setTimeout(() => {
   closeModal();
 }, 4000);
 }
-
-
 // 058 - JSON сервер отправка в db.json
 // fetch('https://tochka-focusa.ru/111/db.json')
 // .then((data)=> data.json())
 // .then(res => console.log(res));
 
+// Слайдер простой -061
+
+const offerSlide = document.querySelectorAll('.offer__slide');
+const sliderPrevBtn = document.querySelector('.offer__slider-prev');
+const sliderNextBtn = document.querySelector('.offer__slider-next');
+const currentNum = document.querySelector('#current');
+const totalNum = document.querySelector('#total');
+// Показываем первый слайд при загрузке
+let indexSlide = 1; // у Ивана =1
+// вариант 2 - Ивана
+
+showSlide(indexSlide); // показываем первый слайд
+function showSlide(n) {
+  if(n > offerSlide.length){
+    indexSlide = 1; 
+   } 
+   if(n < 1) {
+     indexSlide = offerSlide.length;
+   } 
+   offerSlide.forEach(item => { 
+    item.classList.remove('active');
+    offerSlide[indexSlide-1].classList.add('active');
+   }); 
+}
+//для того чтобы контролировать индекс, изменяем его значения при клике на кнопках - отсюда значение индекса пойдет дальше
+function currentIndex(n) {
+  showSlide(indexSlide = indexSlide + n );
+  //здесь индекс передастся в остновную ф.showSlide
+ }
+
+sliderNextBtn.addEventListener('click', ()=> {
+  // currentIndex(indexSlide +1); // убираем
+  // showSlide(indexSlide  + 1 ); так не сработает
+  showSlide(indexSlide = indexSlide + 1 ); // так  - да
+  showCurrentNum(indexSlide);
+  });
+sliderPrevBtn.addEventListener('click', ()=> { 
+  // currentIndex(-1);
+  showSlide(indexSlide = indexSlide - 1 );
+showCurrentNum(indexSlide);
+});
+
+// функция показа Общего кол-ва номеров слайда
+function showTotalNum() { 
+  if(offerSlide.length < 10) {
+     totalNum.innerHTML = `0${offerSlide.length}`;
+    } else {
+     totalNum.innerHTML= offerSlide.length;
+    }
+ }
+ showTotalNum();
+ // ф. показа текущего номера
+ function showCurrentNum(n) { 
+   if(n <= 9) {
+    currentNum.innerHTML = `0${n}`;
+    console.log(n);
+   } else {
+    currentNum.innerHTML = `${n}`;
+   }
+ }
+ showCurrentNum(indexSlide);
 
 
-
-
-
-
-
-
-
+// function showSlide(n) {
+//   offerSlide.forEach(item => { 
+//     item.classList.remove('active');
+//     offerSlide[n].classList.add('active');
+//    }); 
+// }
+// showSlide(indexSlide);
+// // функция показа Общего кол-ва номеров слайда
+// function showTotalNum() { 
+//  if(offerSlide.length < 10) {
+//     totalNum.innerHTML = `0${offerSlide.length}`;
+//    } else {
+//     totalNum.innerHTML= offerSlide.length;
+//    }
+// }
+// showTotalNum();
+// // ф. показа текущего номера
+// function showCurrentNum(n) { 
+//   if(n <= 9) {
+//    currentNum.innerHTML = `0${n+1}`;
+//   } else {
+//    currentNum.innerHTML = `${n+1}`;
+//   }
+// }
+// showCurrentNum(indexSlide);
+// sliderNextBtn.addEventListener('click', ()=> {
+//   // сначала проверяем индекс - if можно перенести в ф. ShowSlide
+//   if(indexSlide >= offerSlide.length-1){
+//     indexSlide = 0; 
+//     showSlide(indexSlide);
+//   }  else {
+//     showSlide(indexSlide+1 );
+//     indexSlide++;
+//   }
+//   showCurrentNum(indexSlide);
+// });
+// console.log(offerSlide.length); //4
+// sliderPrevBtn.addEventListener('click', ()=> { 
+//   if(indexSlide <= 0){
+//     indexSlide = offerSlide.length-1; 
+//     showSlide(indexSlide);
+//   }  else {
+//     showSlide(indexSlide-1 );
+//     indexSlide--;
+//   }
+// showCurrentNum(indexSlide);
+// });
+// console.log(currentNum.innerHTML = '');
 }); //конец loaded

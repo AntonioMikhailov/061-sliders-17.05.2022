@@ -4,67 +4,24 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>111</title>
-  <style>
-.box {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  background-color: rgb(178, 178, 178);
-margin: 0px 0px 0px 0px;
-}
-.wrapper-text {
-  position: relative;
-  height:100px;
-}
-.text {
-  /* position: absolute; */
-}
-.box2 {
-  width: 100%;
-  height: 200px;
-  background-color: rgb(115, 115, 115);
-}
-  </style>
+  <title>Document</title>
 </head>
 <body>
-  <form class="form">
-    <input name="textOne"  type="text">
-    <input name="textTwo" type="file">
-    <textarea name="textareaThree" id="" cols="30" rows="10"></textarea>
-    <button>Кнопка</button>
-  </form>
-
-<script>
-  // собираем данные из полей для отправки
-  const form = document.querySelector('form');
-  const btn = document.querySelector('button');
-  const inputOne = document.querySelector('input[name="textOne"]');
-  const inputTwo = document.querySelector('input[name="textTwo"]');
-  const textarea = document.querySelector('textarea[name="textareaThree"]');
- 
- let sendObj = {
-   textOne : '',
-   textTwo: '',
-   textarea: ''
- } 
-
-
- function makeWorker() {
-  let name = "Pete";
-   function() {
-    console.log(name); // Pete -  т.к. сначала ищет в ближайшем окружении
-};
-return name
+  
+  <script>
+    'use strict';
+    num  = 5;
+    function letTest(){
+  let x =1;
+  if (true) {
+    x =2;  // но  если без let то глоб. и  везде 2
+    console.log(x);  // 2
+  }
+  console.log(x);  // 1
 }
-let name = "John";
-// create a function
-let work = makeWorker();
-// call it
-work();// что будет показано? "Pete" (из места создания) или "John" (из места выполнения) – Pete
+letTest();
 
+  </script>
 
-
-</script>
 </body>
 </html>
