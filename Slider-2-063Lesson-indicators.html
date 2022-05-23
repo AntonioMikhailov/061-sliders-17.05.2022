@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slider-063-indicators</title>
+  <style>
+    * {
+      font-family: Arial, sans-serif;
+    }
+    .offer__slider {
+      width: 650px;
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .offer__slider-counter {
+      display: flex;
+      width: 180px;
+      align-items: center;
+      font-size: 24px;
+      color: rgba(0, 0, 0, .5)
+    }
+    .offer__slider-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, .25);
+      overflow: hidden;
+    }
+    .offer__slider-prev {
+      margin-right: 10px;
+      cursor: pointer
+    }
+    .offer__slider-next {
+      margin-left: 10px;
+      cursor: pointer
+    }
+    .offer__slider #current {
+      font-size: 48px;
+      font-weight: 700;
+      color: #000
+    }
+    .offer__slider-inner {
+      display: flex;
+      transition: all 0.3s ease .0s;
+      
+    }
+    .offer__slide {
+      width: 100%;
+      height: 390px;
+    }
+    /* .active.offer__slide {
+      opacity: 1;
+      visibility: visible;
+    } */
+    .offer__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+/* Индикаторы */
+.divIndWrapper {
+
+  width: 300px;
+  height: 50px;
+  margin: 0 auto;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  /* background-color: rgb(183, 183, 183); */
+}
+.divIndicator {
+  width: 20px;
+  height: 20px;
+  background-color: #808080;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease .0s;
+  
+ }
+ .divIndicator:hover {
+  background-color: #812727;
+ }
+ .active.divIndicator {
+  background-color: #812727;
+ }
+  </style>
+</head>
+<body>
+  <div class="offer__slider">
+    <div class="offer__slider-counter">
+      <div class="offer__slider-prev">
+        <img src="icons/left.svg" alt="prev">
+      </div>
+      <span id="current"></span>
+      /
+      <span id="total"></span>
+      <div class="offer__slider-next">
+        <img src="icons/right.svg" alt="next">
+      </div>
+    </div>
+    <!-- ----------------------Слайдер -->
+    <div class="offer__slider-wrapper">
+      <!-- Добавили Обертку к 1 варианту -->
+      <div class="offer__slider-inner">
+        <!-- Отдельные слайды -->
+        <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/food-12.jpg" alt="food">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/olive-oil.jpg" alt="oil">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/paprika.jpg" alt="paprika">
+        </div>
+        <!-- <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/food-12.jpg" alt="food">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/olive-oil.jpg" alt="oil">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/paprika.jpg" alt="paprika">
+        </div>
+        <div class="offer__slide">
+          <img src="img/slider/pepper.jpg" alt="pepper">
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <script>
+    // Слайдер Карусель Урок -063 по примеру НО с промоткой назад
+    const offerSlide = document.querySelectorAll('.offer__slide');
+    const sliderPrevBtn = document.querySelector('.offer__slider-prev');
+    const sliderNextBtn = document.querySelector('.offer__slider-next');
+    const currentNum = document.querySelector('#current');
+    const totalNum = document.querySelector('#total');
+    const slidesWrapper = document.querySelector('.offer__slider-wrapper');
+    const sliderInnerField = document.querySelector('.offer__slider-inner');
+   
+widthWrapper = window.getComputedStyle(slidesWrapper).width;
+
+let indexSlide = 1; 
+let offset = 0; 
+    sliderInnerField.style.width = 100 * offerSlide.length + '%';
+offerSlide.forEach(item => { 
+  item.style.width = widthWrapper; 
+ });
+
+// Создаем индикаторы
+// Обертка
+const divIndWrapper = document.createElement('div');
+divIndWrapper.classList.add('divIndWrapper');
+slidesWrapper.append(divIndWrapper);
+//Индикаторы создаем через цикл. Число берем от кол-ва фото
+// добавляем их в массив через push иначе кликать нельзя??
+let indicatorsArr = []
+offerSlide.forEach((item, i) => { 
+  const divIndicator = document.createElement('div');
+  divIndicator.classList.add('divIndicator');
+  divIndicator.setAttribute('data-ind', i+1 )
+  divIndWrapper.append(divIndicator);
+  indicatorsArr.push(divIndicator)
+ });
+
+ // показываем первый Индикатор при загрузке
+ function showIndicator() {
+ // активируем индикаторы
+ indicatorsArr.forEach(item => { 
+    item.classList.remove('active');
+    indicatorsArr[indexSlide-1].classList.add('active');
+});
+  
+ }
+ showIndicator()
+// console.log(indicatorsArr);
+// КЛИКАЕМ НА ИНДИКАТОРАХ
+indicatorsArr.forEach((item, i) => { 
+  item.addEventListener('click', ()=> { 
+    console.log(i); // номер итдикатора в массиве
+      indexSlide = i+1;
+    showCurrentNum(indexSlide);
+    // Сдвиг смещение = 650 * умножить теперь на номер индикатора
+    offset = +widthWrapper.slice(0, widthWrapper.length -2) * (i);
+    sliderInnerField.style.transform = `translateX(-${offset}px)`;  
+    showIndicator()
+});
+ });
+
+
+ // КЛИКАЕМ НА КНОПКАХ
+ sliderNextBtn.addEventListener('click', ()=> { 
+   // уловие чтобы следить когда слайдер дойдет до последнего
+   // НО width  у нас 650px  и надо отрезать px от числа иначе NaN
+if(offset == +widthWrapper.slice(0, widthWrapper.length -2) * (offerSlide.length -1))
+{
+  offset = 0;
+} else {
+  offset += +widthWrapper.slice(0, widthWrapper.length -2) // 650
+}
+// будем сдвигать на ширину offset 
+  sliderInnerField.style.transform = `translateX(-${offset}px)`; // минус стоит перед offset -${ofsset}px
+  showCurrentNum(indexSlide = indexSlide + 1);
+  console.log(indexSlide);
+  showIndicator(indexSlide);
+});
+
+
+
+sliderPrevBtn.addEventListener('click', ()=> { 
+  // здесь мы проверяем не последний а первый слайд
+if( offset == 0){
+ offset = +widthWrapper.slice(0, widthWrapper.length -2) * (offerSlide.length -1)
+} else {
+  offset -= +widthWrapper.slice(0, widthWrapper.length -2) // 650
+}
+  sliderInnerField.style.transform = `translateX(-${offset}px)`;
+  showCurrentNum(indexSlide = indexSlide - 1);
+  showIndicator(indexSlide)
+});
+   //ф. показа текущего номера
+    function showCurrentNum(n) {
+      // console.log(n);
+      if (n > offerSlide.length) {
+        indexSlide = 1;
+      }
+      if (n < 1) {
+        indexSlide = offerSlide.length;
+      }
+      if(indexSlide <10) {
+        currentNum.innerHTML = `0${indexSlide}`; // именно indexSlide  а не (n) 
+      } else {
+        currentNum.innerHTML = indexSlide;
+      }
+    }
+    showCurrentNum(indexSlide);
+        // функция показа Общего кол-ва номеров слайда
+        function showTotalNum() {
+ if (offerSlide.length < 10) {
+        totalNum.innerHTML = `0${offerSlide.length}`;
+        // currentNum.innerHTML = `0${indexSlide}`;
+      } else {
+        totalNum.innerHTML = offerSlide.length;
+        // currentNum.innerHTML = indexSlide;
+      }
+    }
+    showTotalNum();
+  </script>
+</body>
+</html>
